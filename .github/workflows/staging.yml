@@ -1,0 +1,25 @@
+name: Staging dry-run
+on:
+  workflow_dispatch:
+    inputs:
+      tenant:
+        description: Tenant slug
+        required: true
+        default: acme
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e .
+      - name: Validate
+        run: eadk validate --tenant "${{ inputs.tenant }}" --env staging
+      - name: Plan
+        run: eadk plan --tenant "${{ inputs.tenant }}" --env staging
+      - name: Preview (mock by default)
+        run: eadk deploy --tenant "${{ inputs.tenant }}" --env staging

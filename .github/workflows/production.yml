@@ -1,0 +1,46 @@
+name: Production deploy (manual approval)
+on:
+  workflow_dispatch:
+    inputs:
+      tenant:
+        description: Tenant slug
+        required: true
+        default: acme
+      apply:
+        description: Apply deployment after preview and approval
+        type: boolean
+        required: true
+        default: false
+permissions:
+  contents: read
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+      EADK_PRODUCTION_APPROVED: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python -m pip install -e .
+      - name: Run tests
+        run: python -m unittest discover -s tests -v
+      - name: Validate production
+        run: eadk validate --tenant "${{ inputs.tenant }}" --env production
+      - name: Build plan
+        run: eadk plan --tenant "${{ inputs.tenant }}" --env production
+      - name: Install official ElevenLabs CLI only when configured
+        if: hashFiles('elevenlabs/agents.json') != ''
+        run: npm install -g @elevenlabs/cli
+      - name: Preview (never writes)
+        run: eadk deploy --tenant "${{ inputs.tenant }}" --env production
+      - name: Apply only when explicitly selected
+        if: inputs.apply == true
+        run: eadk deploy --tenant "${{ inputs.tenant }}" --env production --apply

@@ -1,0 +1,26 @@
+{
+  "provider": "mock",
+  "agent": {
+    "name": "Acme Support Assistant",
+    "template": "customer-support"
+  },
+  "security": {
+    "require_authentication": true,
+    "audit_logging": true,
+    "pii_redaction": true,
+    "allowed_tools": [
+      "get_ticket",
+      "create_ticket"
+    ]
+  },
+  "governance": {
+    "require_approval": true,
+    "tests_required": true
+  },
+  "integrations": {
+    "crm": {
+      "adapter": "synthetic",
+      "endpoint_env": "CRM_ENDPOINT"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "provider": "mock",
+  "agent": {
+    "name": "Contoso Ticket Assistant"
+  },
+  "security": {
+    "require_authentication": true,
+    "audit_logging": true,
+    "pii_redaction": true,
+    "allowed_tools": [
+      "get_ticket"
+    ]
+  },
+  "governance": {
+    "require_approval": true,
+    "tests_required": true
+  },
+  "integrations": {
+    "crm": "synthetic"
+  }
+}

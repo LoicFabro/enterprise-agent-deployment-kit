@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "enterprise-agent-deployment-kit"
+version = "1.0.1"
+description = "Policy-gated, multi-tenant AI agent deployment orchestration over native providers"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "Apache-2.0"}
+authors = [{name = "Fabro Praxis"}]
+dependencies = []
+[project.scripts]
+eadk = "eadk.cli:main"
+[tool.setuptools.packages.find]
+where = ["src"]
+[tool.pytest.ini_options]
+testpaths = ["tests"]

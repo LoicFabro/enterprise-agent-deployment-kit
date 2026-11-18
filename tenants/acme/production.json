@@ -1,0 +1,6 @@
+{
+  "environment": "production",
+  "agent": {
+    "name": "Acme Support Assistant [production]"
+  }
+}
